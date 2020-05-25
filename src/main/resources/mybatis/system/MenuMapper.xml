@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.chinare.opension2.system.dao.MenuDao">
+
+	<select id="get" resultType="com.chinare.opension2.system.domain.MenuDO">
+		select
+		`menu_id`,`parent_id`,`name_egl`,`name_chn`,`url`,`perms`,`type`,`icon`,`order_num`,`gmt_create`,`gmt_modified`
+		from sys_menu where menu_id = #{value}
+	</select>
+
+	<select id="list" resultType="com.chinare.opension2.system.domain.MenuDO">
+		SELECT sm.menu_id,
+				sm.parent_id,
+				sm.name_egl,
+				sm.name_chn,
+				sm.url,
+				sm.perms,
+				sm.type,
+				sm.icon,
+				sm.order_num,
+				sm.gmt_create,
+				sm.gmt_modified
+			FROM
+			sys_menu sm left join sys_application sa on sm.appl_id = sa.id
+		<where>
+			<if test="menuId != null and menuId != ''"> and sm.menu_id = #{menuId} </if>
+			<if test="parentId != null and parentId != ''"> and sm.parent_id = #{parentId} </if>
+			<if test="applId != null and applId != ''"> and sm.appl_id = #{applId} </if>
+			<if test="appEglName != null and appEglName != ''"> and sa.app_egl_name = #{appEglName} </if>
+			<if test="name_egl != null and name_egl != ''"> and sm.name_egl = #{nameEgl} </if>
+			<if test="name_chn != null and name_chn != ''"> and sm.name_chn = #{nameChn} </if>
+			<if test="url != null and url != ''"> and sm.url = #{url} </if>
+			<if test="perms != null and perms != ''"> and sm.perms = #{perms} </if>
+			<if test="type != null and type != ''"> and sm.type = #{type} </if>
+			<if test="icon != null and icon != ''"> and sm.icon = #{icon} </if>
+			<if test="orderNum != null and orderNum != ''"> and sm.order_num = #{orderNum} </if>
+			<if test="gmtCreate != null and gmtCreate != ''"> and sm.gmt_create = #{gmtCreate} </if>
+			<if test="gmtModified != null and gmtModified != ''"> and sm.gmt_modified = #{gmtModified} </if>
+		</where>
+		<choose>
+			<when test="sort != null and sort.trim() != ''">
+				order by ${sort} ${order}
+			</when>
+			<otherwise>
+				order by sm.parent_id, sm.menu_id
+			</otherwise>
+		</choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+
+	<select id="count" resultType="int">
+		select count(*) from sys_menu
+		<where>
+			<if test="menuId != null and menuId != ''"> and menu_id = #{menuId} </if>
+			<if test="parentId != null and parentId != ''"> and parent_id = #{parentId} </if>
+			<if test="name_egl != null and name_egl != ''"> and name_egl = #{nameEgl} </if>
+			<if test="name_chn != null and name_chn != ''"> and name_chn = #{nameChn} </if>
+			<if test="url != null and url != ''"> and url = #{url} </if>
+			<if test="perms != null and perms != ''"> and perms = #{perms} </if>
+			<if test="type != null and type != ''"> and type = #{type} </if>
+			<if test="icon != null and icon != ''"> and icon = #{icon} </if>
+			<if test="orderNum != null and orderNum != ''"> and order_num = #{orderNum} </if>
+			<if test="gmtCreate != null and gmtCreate != ''"> and gmt_create = #{gmtCreate} </if>
+			<if test="gmtModified != null and gmtModified != ''"> and gmt_modified = #{gmtModified} </if>
+		</where>
+	</select>
+
+	<insert id="save" parameterType="com.chinare.opension2.system.domain.MenuDO"
+		useGeneratedKeys="true" keyProperty="menuId">
+		insert into sys_menu
+		(
+		`parent_id`,
+		`name_egl`,
+		`name_chn`,
+		`url`,
+		`perms`,
+		`type`,
+		`icon`,
+		`order_num`,
+		`gmt_create`,
+		`gmt_modified`
+		)
+		values
+		(
+		#{parentId},
+		#{nameEgl},
+		#{nameChn},
+		#{url},
+		#{perms},
+		#{type},
+		#{icon},
+		#{orderNum},
+		#{gmtCreate},
+		#{gmtModified}
+		)
+	</insert>
+
+	<update id="update" parameterType="com.chinare.opension2.system.domain.MenuDO">
+		update sys_menu
+		<set>
+			<if test="parentId != null">`parent_id` = #{parentId}, </if>
+			<if test="name_egl != null">`name_egl` = #{nameEgl}, </if>
+			<if test="name_chn != null">`name_chn` = #{nameChn}, </if>
+			<if test="url != null">`url` = #{url}, </if>
+			<if test="perms != null">`perms` = #{perms}, </if>
+			<if test="type != null">`type` = #{type}, </if>
+			<if test="icon != null">`icon` = #{icon}, </if>
+			<if test="orderNum != null">`order_num` = #{orderNum}, </if>
+			<if test="gmtCreate != null">`gmt_create` = #{gmtCreate}, </if>
+			<if test="gmtModified != null">`gmt_modified` = #{gmtModified}</if>
+		</set>
+		where menu_id = #{menuId}
+	</update>
+
+	<delete id="remove">
+		delete from sys_menu where menu_id = #{value} or parent_id = #{value}
+	</delete>
+
+	<delete id="batchRemove">
+		delete from sys_menu where menu_id in
+		<foreach item="menuId" collection="array" open="(" separator=","
+			close=")">
+			#{menuId}
+		</foreach>
+	</delete>
+
+	<select id="listMenuByUserId" resultType="com.chinare.opension2.system.domain.MenuDO">
+		select distinct
+		m.menu_id , parent_id, name_egl,name_chn, url,
+		perms,`type`,icon,order_num,gmt_create, gmt_modified
+		from sys_menu m
+		left
+		join sys_role_menu rm on m.menu_id = rm.menu_id left join
+		sys_user_role ur
+		on rm.role_id =ur.role_id where ur.user_id = #{id}
+		and
+		m.type in(0,1)
+		order by
+		m.order_num
+	</select>
+
+	<select id="listUserPerms" resultType="string">
+		select distinct m.perms
+		from sys_menu m left join
+		sys_role_menu rm on m.menu_id = rm.menu_id
+		left join sys_user_role ur
+		on rm.role_id = ur.role_id where ur.user_id
+		= #{id}
+	</select>
+	
+	<select id="findMaxId" resultType="long" statementType="PREPARED">
+	    select max(menu_id) from sys_menu
+	</select>
+	
+</mapper>

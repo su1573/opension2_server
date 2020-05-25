@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.chinare.opension2.biz.sysmanage.dao.OpSysMenuDao">
+
+	<select id="get" resultType="com.chinare.opension2.biz.sysmanage.domain.OpSysMenuDO">
+		select menuid,menuname,upmenuid,topmenuid,menulevel,sortorder,linkpath,childcount,userdescription,operator,makedate,maketime,state,iconskin from OP_SYS_MENU where menuid = #{value}
+	</select>
+
+	<select id="list" resultType="com.chinare.opension2.biz.sysmanage.domain.OpSysMenuDO">
+		<if test="offset != null and limit != null">
+			select T2.rn ,T2.menuid,T2.menuname,T2.upmenuid,T2.topmenuid,T2.menulevel,T2.sortorder,T2.linkpath,T2.childcount,T2.userdescription,T2.operator,T2.makedate,T2.maketime,T2.state,T2.iconskin from(
+			select rownum rn ,T.menuid,T.menuname,T.upmenuid,T.topmenuid,T.menulevel,T.sortorder,T.linkpath,T.childcount,T.userdescription,T.operator,T.makedate,T.maketime,T.state,T.iconskin from (
+		</if>
+		select menuid,menuname,upmenuid,topmenuid,menulevel,sortorder,linkpath,childcount,userdescription,operator,makedate,maketime,state,iconskin from OP_SYS_MENU
+        <where>  
+		  		  <if test="menuid != null and menuid != ''"> and menuid = #{menuid} </if>
+		  		  <if test="menuname != null and menuname != ''"> and menuname = #{menuname} </if>
+		  		  <if test="upmenuid != null and upmenuid != ''"> and upmenuid = #{upmenuid} </if>
+		  		  <if test="topmenuid != null and topmenuid != ''"> and topmenuid = #{topmenuid} </if>
+		  		  <if test="menulevel != null and menulevel != ''"> and menulevel = #{menulevel} </if>
+		  		  <if test="sortorder != null and sortorder != ''"> and sortorder = #{sortorder} </if>
+		  		  <if test="linkpath != null and linkpath != ''"> and linkpath = #{linkpath} </if>
+		  		  <if test="childcount != null and childcount != ''"> and childcount = #{childcount} </if>
+		  		  <if test="userdescription != null and userdescription != ''"> and userdescription = #{userdescription} </if>
+		  		  <if test="operator != null and operator != ''"> and operator = #{operator} </if>
+		  		  <if test="makedate != null and makedate != ''"> and makedate = #{makedate} </if>
+		  		  <if test="maketime != null and maketime != ''"> and maketime = #{maketime} </if>
+		  		  <if test="state != null and state != ''"> and state = #{state} </if>
+		  		  <if test="iconskin != null and iconskin != ''"> and iconskin = #{iconskin} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by menuid desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			) T) T2 where rn  BETWEEN #{offset} and #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from OP_SYS_MENU
+		 <where>  
+		  		  <if test="menuid != null and menuid != ''"> and menuid = #{menuid} </if>
+		  		  <if test="menuname != null and menuname != ''"> and menuname = #{menuname} </if>
+		  		  <if test="upmenuid != null and upmenuid != ''"> and upmenuid = #{upmenuid} </if>
+		  		  <if test="topmenuid != null and topmenuid != ''"> and topmenuid = #{topmenuid} </if>
+		  		  <if test="menulevel != null and menulevel != ''"> and menulevel = #{menulevel} </if>
+		  		  <if test="sortorder != null and sortorder != ''"> and sortorder = #{sortorder} </if>
+		  		  <if test="linkpath != null and linkpath != ''"> and linkpath = #{linkpath} </if>
+		  		  <if test="childcount != null and childcount != ''"> and childcount = #{childcount} </if>
+		  		  <if test="userdescription != null and userdescription != ''"> and userdescription = #{userdescription} </if>
+		  		  <if test="operator != null and operator != ''"> and operator = #{operator} </if>
+		  		  <if test="makedate != null and makedate != ''"> and makedate = #{makedate} </if>
+		  		  <if test="maketime != null and maketime != ''"> and maketime = #{maketime} </if>
+		  		  <if test="state != null and state != ''"> and state = #{state} </if>
+		  		  <if test="iconskin != null and iconskin != ''"> and iconskin = #{iconskin} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.chinare.opension2.biz.sysmanage.domain.OpSysMenuDO">
+		insert into OP_SYS_MENU
+		(
+			menuid, 
+			menuname, 
+			upmenuid, 
+			topmenuid, 
+			menulevel, 
+			sortorder, 
+			linkpath, 
+			childcount, 
+			userdescription, 
+			operator, 
+			makedate, 
+			maketime, 
+			state, 
+			iconskin
+		)
+		values
+		(
+			#{menuid}, 
+			#{menuname}, 
+			#{upmenuid}, 
+			#{topmenuid}, 
+			#{menulevel}, 
+			#{sortorder}, 
+			#{linkpath}, 
+			#{childcount}, 
+			#{userdescription}, 
+			#{operator}, 
+			#{makedate}, 
+			#{maketime}, 
+			#{state}, 
+			#{iconskin}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.chinare.opension2.biz.sysmanage.domain.OpSysMenuDO">
+		update OP_SYS_MENU 
+		<set>
+			<if test="menuname != null">menuname = #{menuname}, </if>
+			<if test="upmenuid != null">upmenuid = #{upmenuid}, </if>
+			<if test="topmenuid != null">topmenuid = #{topmenuid}, </if>
+			<if test="menulevel != null">menulevel = #{menulevel}, </if>
+			<if test="sortorder != null">sortorder = #{sortorder}, </if>
+			<if test="linkpath != null">linkpath = #{linkpath}, </if>
+			<if test="childcount != null">childcount = #{childcount}, </if>
+			<if test="userdescription != null">userdescription = #{userdescription}, </if>
+			<if test="operator != null">operator = #{operator}, </if>
+			<if test="makedate != null">makedate = #{makedate}, </if>
+			<if test="maketime != null">maketime = #{maketime}, </if>
+			<if test="state != null">state = #{state}, </if>
+			<if test="iconskin != null">iconskin = #{iconskin}</if>
+		</set>
+		where menuid = #{menuid}
+	</update>
+	
+	<delete id="remove">
+		delete from OP_SYS_MENU where menuid = #{menuid}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from OP_SYS_MENU where menuid in 
+		<foreach item="menuid" collection="array" open="(" separator="," close=")">
+			#{menuid}
+		</foreach>
+	</delete>
+
+</mapper>

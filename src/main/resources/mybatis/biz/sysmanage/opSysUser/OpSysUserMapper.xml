@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.chinare.opension2.biz.sysmanage.dao.OpSysUserDao">
+
+	<select id="get" resultType="com.chinare.opension2.biz.sysmanage.domain.OpSysUserDO">
+		select operator,makedate,maketime,usercode,username,comcode,password,email,phone,userdescription,userstate,validstartdate,validenddate,logonwrongnumber,lastlogondate,lockstatus,alterpassworddate,onlinestate from OP_SYS_USER where operator = #{value}
+	</select>
+
+	<select id="list" resultType="com.chinare.opension2.biz.sysmanage.domain.OpSysUserDO">
+		<if test="offset != null and limit != null">
+			select T2.rn ,T2.operator,T2.makedate,T2.maketime,T2.usercode,T2.username,T2.comcode,T2.password,T2.email,T2.phone,T2.userdescription,T2.userstate,T2.validstartdate,T2.validenddate,T2.logonwrongnumber,T2.lastlogondate,T2.lockstatus,T2.alterpassworddate,T2.onlinestate from(
+			select rownum rn ,T.operator,T.makedate,T.maketime,T.usercode,T.username,T.comcode,T.password,T.email,T.phone,T.userdescription,T.userstate,T.validstartdate,T.validenddate,T.logonwrongnumber,T.lastlogondate,T.lockstatus,T.alterpassworddate,T.onlinestate from (
+		</if>
+		select operator,makedate,maketime,usercode,username,comcode,password,email,phone,userdescription,userstate,validstartdate,validenddate,logonwrongnumber,lastlogondate,lockstatus,alterpassworddate,onlinestate from OP_SYS_USER
+        <where>  
+		  		  <if test="operator != null and operator != ''"> and operator = #{operator} </if>
+		  		  <if test="makedate != null and makedate != ''"> and makedate = #{makedate} </if>
+		  		  <if test="maketime != null and maketime != ''"> and maketime = #{maketime} </if>
+		  		  <if test="usercode != null and usercode != ''"> and usercode = #{usercode} </if>
+		  		  <if test="username != null and username != ''"> and username = #{username} </if>
+		  		  <if test="comcode != null and comcode != ''"> and comcode = #{comcode} </if>
+		  		  <if test="password != null and password != ''"> and password = #{password} </if>
+		  		  <if test="email != null and email != ''"> and email = #{email} </if>
+		  		  <if test="phone != null and phone != ''"> and phone = #{phone} </if>
+		  		  <if test="userdescription != null and userdescription != ''"> and userdescription = #{userdescription} </if>
+		  		  <if test="userstate != null and userstate != ''"> and userstate = #{userstate} </if>
+		  		  <if test="validstartdate != null and validstartdate != ''"> and validstartdate = #{validstartdate} </if>
+		  		  <if test="validenddate != null and validenddate != ''"> and validenddate = #{validenddate} </if>
+		  		  <if test="logonwrongnumber != null and logonwrongnumber != ''"> and logonwrongnumber = #{logonwrongnumber} </if>
+		  		  <if test="lastlogondate != null and lastlogondate != ''"> and lastlogondate = #{lastlogondate} </if>
+		  		  <if test="lockstatus != null and lockstatus != ''"> and lockstatus = #{lockstatus} </if>
+		  		  <if test="alterpassworddate != null and alterpassworddate != ''"> and alterpassworddate = #{alterpassworddate} </if>
+		  		  <if test="onlinestate != null and onlinestate != ''"> and onlinestate = #{onlinestate} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by operator desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			) T) T2 where rn  BETWEEN #{offset} and #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from OP_SYS_USER
+		 <where>  
+		  		  <if test="operator != null and operator != ''"> and operator = #{operator} </if>
+		  		  <if test="makedate != null and makedate != ''"> and makedate = #{makedate} </if>
+		  		  <if test="maketime != null and maketime != ''"> and maketime = #{maketime} </if>
+		  		  <if test="usercode != null and usercode != ''"> and usercode = #{usercode} </if>
+		  		  <if test="username != null and username != ''"> and username = #{username} </if>
+		  		  <if test="comcode != null and comcode != ''"> and comcode = #{comcode} </if>
+		  		  <if test="password != null and password != ''"> and password = #{password} </if>
+		  		  <if test="email != null and email != ''"> and email = #{email} </if>
+		  		  <if test="phone != null and phone != ''"> and phone = #{phone} </if>
+		  		  <if test="userdescription != null and userdescription != ''"> and userdescription = #{userdescription} </if>
+		  		  <if test="userstate != null and userstate != ''"> and userstate = #{userstate} </if>
+		  		  <if test="validstartdate != null and validstartdate != ''"> and validstartdate = #{validstartdate} </if>
+		  		  <if test="validenddate != null and validenddate != ''"> and validenddate = #{validenddate} </if>
+		  		  <if test="logonwrongnumber != null and logonwrongnumber != ''"> and logonwrongnumber = #{logonwrongnumber} </if>
+		  		  <if test="lastlogondate != null and lastlogondate != ''"> and lastlogondate = #{lastlogondate} </if>
+		  		  <if test="lockstatus != null and lockstatus != ''"> and lockstatus = #{lockstatus} </if>
+		  		  <if test="alterpassworddate != null and alterpassworddate != ''"> and alterpassworddate = #{alterpassworddate} </if>
+		  		  <if test="onlinestate != null and onlinestate != ''"> and onlinestate = #{onlinestate} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.chinare.opension2.biz.sysmanage.domain.OpSysUserDO">
+		insert into OP_SYS_USER
+		(
+			operator, 
+			makedate, 
+			maketime, 
+			usercode, 
+			username, 
+			comcode, 
+			password, 
+			email, 
+			phone, 
+			userdescription, 
+			userstate, 
+			validstartdate, 
+			validenddate, 
+			logonwrongnumber, 
+			lastlogondate, 
+			lockstatus, 
+			alterpassworddate, 
+			onlinestate
+		)
+		values
+		(
+			#{operator}, 
+			#{makedate}, 
+			#{maketime}, 
+			#{usercode}, 
+			#{username}, 
+			#{comcode}, 
+			#{password}, 
+			#{email}, 
+			#{phone}, 
+			#{userdescription}, 
+			#{userstate}, 
+			#{validstartdate}, 
+			#{validenddate}, 
+			#{logonwrongnumber}, 
+			#{lastlogondate}, 
+			#{lockstatus}, 
+			#{alterpassworddate}, 
+			#{onlinestate}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.chinare.opension2.biz.sysmanage.domain.OpSysUserDO">
+		update OP_SYS_USER 
+		<set>
+			<if test="makedate != null">makedate = #{makedate}, </if>
+			<if test="maketime != null">maketime = #{maketime}, </if>
+			<if test="usercode != null">usercode = #{usercode}, </if>
+			<if test="username != null">username = #{username}, </if>
+			<if test="comcode != null">comcode = #{comcode}, </if>
+			<if test="password != null">password = #{password}, </if>
+			<if test="email != null">email = #{email}, </if>
+			<if test="phone != null">phone = #{phone}, </if>
+			<if test="userdescription != null">userdescription = #{userdescription}, </if>
+			<if test="userstate != null">userstate = #{userstate}, </if>
+			<if test="validstartdate != null">validstartdate = #{validstartdate}, </if>
+			<if test="validenddate != null">validenddate = #{validenddate}, </if>
+			<if test="logonwrongnumber != null">logonwrongnumber = #{logonwrongnumber}, </if>
+			<if test="lastlogondate != null">lastlogondate = #{lastlogondate}, </if>
+			<if test="lockstatus != null">lockstatus = #{lockstatus}, </if>
+			<if test="alterpassworddate != null">alterpassworddate = #{alterpassworddate}, </if>
+			<if test="onlinestate != null">onlinestate = #{onlinestate}</if>
+		</set>
+		where operator = #{operator}
+	</update>
+	
+	<delete id="remove">
+		delete from OP_SYS_USER where operator = #{operator}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from OP_SYS_USER where operator in 
+		<foreach item="operator" collection="array" open="(" separator="," close=")">
+			#{operator}
+		</foreach>
+	</delete>
+
+</mapper>

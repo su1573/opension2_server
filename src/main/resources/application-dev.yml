@@ -1,0 +1,114 @@
+generator:
+  # 设置验证方式，如果填“AUTH-CENTER”，则走统一认证。
+  authServer: AUTH-CENTER
+  #authServer: 
+  uploadPath: c:/var/uploaded_files/
+  username: opension
+  password: opension
+server: 
+  port: 6666
+  session-timeout: 1800
+logging:
+  level:
+    root: info
+    com.chinare: debug
+#  logstashIp: 172.25.147.165
+#  logstashPort: 5044
+management:
+  metrics:
+    export:
+      prometheus:
+        step: 30s
+        enabled: true
+        descriptions: true
+    tags:
+      application: ${spring.application.name} 
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+spring:
+  servlet:
+    multipart:
+      max-file-size: 30Mb
+      max-request-size: 30Mb
+  devtools: 
+    restart:
+      enabled: true
+  cache:
+    type: ehcache
+    ehcache:
+      config: classpath:config/ehcache.xml
+  thymeleaf:
+    mode: LEGACYHTML5
+    cache: false
+  jackson:
+    time-zone: GMT+8
+    date-format: yyyy-MM-dd HH:mm:ss
+  sleuth:
+    sampler:
+      probability: 1.0
+  rabbitmq:
+    addresses: 101.200.62.107:5672
+    host: 101.200.62.107
+    port: 5672
+    password: admin
+    username: admin
+    virtual-host: /dev
+    use-ssl: false
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driverClassName:
+#   本地
+    url: jdbc:oracle:thin:@localhost:1521:orcl
+    username: opension
+    password: opension
+    initialSize: 1
+    minIdle: 3
+    maxActive: 20
+    # 配置获取连接等待超时的时间
+    maxWait: 60000
+    # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+    timeBetweenEvictionRunsMillis: 60000
+    # 配置一个连接在池中最小生存的时间，单位是毫秒
+    minEvictableIdleTimeMillis: 30000
+    validationQuery: select 'x'
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    # 打开PSCache，并且指定每个连接上PSCache的大小
+    poolPreparedStatements: true
+    maxPoolPreparedStatementPerConnectionSize: 20
+    # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+    filters: stat,wall,slf4j
+    # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+    # 合并多个DruidDataSource的监控数据
+    #useGlobalDataSourceStat: true
+  redis:
+    host: localhost
+    port: 6379
+    password:
+    # 连接超时时间（毫秒）
+    timeout: 10000
+    jedis:
+      pool:
+        # 连接池中的最大空闲连接
+        max-idle: 8
+        # 连接池中的最小空闲连接
+        min-idle: 10
+        # 连接池最大连接数（使用负值表示没有限制）
+        max-active: 100
+        # 连接池最大阻塞等待时间（使用负值表示没有限制）
+        max-wait: -1
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+  mapper-locations: mybatis/**/*Mapper.xml
+  typeAliasesPackage: com.chinare.opension2.**.domain
+ldap:
+  url: "ldap://106.13.142.212:389/"
+  base: DC=chinare,DC=local
+  userDn: "cn=Manager,dc=chinare,dc=local"
+  userPwd: 666666
+  referral: follow

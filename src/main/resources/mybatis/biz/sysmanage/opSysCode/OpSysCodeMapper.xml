@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.chinare.opension2.biz.sysmanage.dao.OpSysCodeDao">
+
+	<select id="get" resultType="com.chinare.opension2.biz.sysmanage.domain.OpSysCodeDO">
+		select lastoptdate,lastopttime,linkcodetype,customerserviceper,codetype,code,codename,linkcode,sortorder,othersign,createoperator,createoptdate,createopttime,lastoperator from OP_SYS_CODE where lastoptdate = #{value}
+	</select>
+
+	<select id="list" resultType="com.chinare.opension2.biz.sysmanage.domain.OpSysCodeDO">
+		<if test="offset != null and limit != null">
+			select T2.rn ,T2.lastoptdate,T2.lastopttime,T2.linkcodetype,T2.customerserviceper,T2.codetype,T2.code,T2.codename,T2.linkcode,T2.sortorder,T2.othersign,T2.createoperator,T2.createoptdate,T2.createopttime,T2.lastoperator from(
+			select rownum rn ,T.lastoptdate,T.lastopttime,T.linkcodetype,T.customerserviceper,T.codetype,T.code,T.codename,T.linkcode,T.sortorder,T.othersign,T.createoperator,T.createoptdate,T.createopttime,T.lastoperator from (
+		</if>
+		select lastoptdate,lastopttime,linkcodetype,customerserviceper,codetype,code,codename,linkcode,sortorder,othersign,createoperator,createoptdate,createopttime,lastoperator from OP_SYS_CODE
+        <where>  
+		  		  <if test="lastoptdate != null and lastoptdate != ''"> and lastoptdate = #{lastoptdate} </if>
+		  		  <if test="lastopttime != null and lastopttime != ''"> and lastopttime = #{lastopttime} </if>
+		  		  <if test="linkcodetype != null and linkcodetype != ''"> and linkcodetype = #{linkcodetype} </if>
+		  		  <if test="customerserviceper != null and customerserviceper != ''"> and customerserviceper = #{customerserviceper} </if>
+		  		  <if test="codetype != null and codetype != ''"> and codetype = #{codetype} </if>
+		  		  <if test="code != null and code != ''"> and code = #{code} </if>
+		  		  <if test="codename != null and codename != ''"> and codename = #{codename} </if>
+		  		  <if test="linkcode != null and linkcode != ''"> and linkcode = #{linkcode} </if>
+		  		  <if test="sortorder != null and sortorder != ''"> and sortorder = #{sortorder} </if>
+		  		  <if test="othersign != null and othersign != ''"> and othersign = #{othersign} </if>
+		  		  <if test="createoperator != null and createoperator != ''"> and createoperator = #{createoperator} </if>
+		  		  <if test="createoptdate != null and createoptdate != ''"> and createoptdate = #{createoptdate} </if>
+		  		  <if test="createopttime != null and createopttime != ''"> and createopttime = #{createopttime} </if>
+		  		  <if test="lastoperator != null and lastoperator != ''"> and lastoperator = #{lastoperator} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by lastoptdate desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			) T) T2 where rn  BETWEEN #{offset} and #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from OP_SYS_CODE
+		 <where>  
+		  		  <if test="lastoptdate != null and lastoptdate != ''"> and lastoptdate = #{lastoptdate} </if>
+		  		  <if test="lastopttime != null and lastopttime != ''"> and lastopttime = #{lastopttime} </if>
+		  		  <if test="linkcodetype != null and linkcodetype != ''"> and linkcodetype = #{linkcodetype} </if>
+		  		  <if test="customerserviceper != null and customerserviceper != ''"> and customerserviceper = #{customerserviceper} </if>
+		  		  <if test="codetype != null and codetype != ''"> and codetype = #{codetype} </if>
+		  		  <if test="code != null and code != ''"> and code = #{code} </if>
+		  		  <if test="codename != null and codename != ''"> and codename = #{codename} </if>
+		  		  <if test="linkcode != null and linkcode != ''"> and linkcode = #{linkcode} </if>
+		  		  <if test="sortorder != null and sortorder != ''"> and sortorder = #{sortorder} </if>
+		  		  <if test="othersign != null and othersign != ''"> and othersign = #{othersign} </if>
+		  		  <if test="createoperator != null and createoperator != ''"> and createoperator = #{createoperator} </if>
+		  		  <if test="createoptdate != null and createoptdate != ''"> and createoptdate = #{createoptdate} </if>
+		  		  <if test="createopttime != null and createopttime != ''"> and createopttime = #{createopttime} </if>
+		  		  <if test="lastoperator != null and lastoperator != ''"> and lastoperator = #{lastoperator} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.chinare.opension2.biz.sysmanage.domain.OpSysCodeDO">
+		insert into OP_SYS_CODE
+		(
+			lastoptdate, 
+			lastopttime, 
+			linkcodetype, 
+			customerserviceper, 
+			codetype, 
+			code, 
+			codename, 
+			linkcode, 
+			sortorder, 
+			othersign, 
+			createoperator, 
+			createoptdate, 
+			createopttime, 
+			lastoperator
+		)
+		values
+		(
+			#{lastoptdate}, 
+			#{lastopttime}, 
+			#{linkcodetype}, 
+			#{customerserviceper}, 
+			#{codetype}, 
+			#{code}, 
+			#{codename}, 
+			#{linkcode}, 
+			#{sortorder}, 
+			#{othersign}, 
+			#{createoperator}, 
+			#{createoptdate}, 
+			#{createopttime}, 
+			#{lastoperator}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.chinare.opension2.biz.sysmanage.domain.OpSysCodeDO">
+		update OP_SYS_CODE 
+		<set>
+			<if test="lastopttime != null">lastopttime = #{lastopttime}, </if>
+			<if test="linkcodetype != null">linkcodetype = #{linkcodetype}, </if>
+			<if test="customerserviceper != null">customerserviceper = #{customerserviceper}, </if>
+			<if test="codetype != null">codetype = #{codetype}, </if>
+			<if test="code != null">code = #{code}, </if>
+			<if test="codename != null">codename = #{codename}, </if>
+			<if test="linkcode != null">linkcode = #{linkcode}, </if>
+			<if test="sortorder != null">sortorder = #{sortorder}, </if>
+			<if test="othersign != null">othersign = #{othersign}, </if>
+			<if test="createoperator != null">createoperator = #{createoperator}, </if>
+			<if test="createoptdate != null">createoptdate = #{createoptdate}, </if>
+			<if test="createopttime != null">createopttime = #{createopttime}, </if>
+			<if test="lastoperator != null">lastoperator = #{lastoperator}</if>
+		</set>
+		where lastoptdate = #{lastoptdate}
+	</update>
+	
+	<delete id="remove">
+		delete from OP_SYS_CODE where lastoptdate = #{lastoptdate}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from OP_SYS_CODE where lastoptdate in 
+		<foreach item="lastoptdate" collection="array" open="(" separator="," close=")">
+			#{lastoptdate}
+		</foreach>
+	</delete>
+
+</mapper>
